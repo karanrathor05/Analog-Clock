@@ -1,39 +1,34 @@
 
-import React, { useState,useEffect } from 'react';
-import './index'
+import React, { useState } from 'react'
+import './index.css'
+const App = () => {
+  const[digitTime,setDigitTime]=useState('0:0:0');
+  const[clockDegree, setClockDegree]=useState([]);
+  document.title="Analog and Digital Clock";
+  setInterval(()=>{
+    const d=new Date();
+    const hr=d.getHours();
+    const hrr=hr>12?hr-12:hr;
+    const min=d.getMinutes();
+    const sec=d.getSeconds();
 
-const App= () => {
-  const [count, setCount] = useState(0);
-  const [countdown, setCountdown] = useState(null);
-
-  const startCountdown = () => {
-    setCountdown(count);
-  };
-
-  useEffect(() => {
-    if (countdown !== null) {
-      const intervalId = setInterval(() => {
-        setCountdown((prevCount) => {
-          if (prevCount === 0) {
-            clearInterval(intervalId);
-            return null;
-          }
-          return prevCount - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(intervalId);
-    }
-  }, [countdown]);
-
+    const hrToDegree=30*hr+min/2;
+    const minToDegree=6*min;
+    const secToDegree=6*sec;
+    setDigitTime(`${hrr}:${min}:${sec}`);
+    setClockDegree([hrToDegree,minToDegree,secToDegree]);
+    },1000)
   return (
-    <div className='k'>
-      <input type="number" value={count} onChange={(e)=>setCount(e.target.value)} />
-      <button onClick={startCountdown}>Start Countdown</button>
-      {countdown !== null && <div className='h'>Countdown: {countdown}</div>}
-      </div>
-    
-  );
-};
+    <div className='clockDiv'>
+      <div className='digitalClock'>
+        {`${digitTime}`}
 
-export default App;
+      </div>
+      <div className='hour' style={{"transform":`rotate(${clockDegree[0]}deg)`}}></div>
+      <div className='minute' style={{"transform":`rotate(${clockDegree[1]}deg)`}}></div>
+      <div className='second' style={{"transform":`rotate(${clockDegree[2]}deg)`}}></div>
+    </div>
+  )
+}
+
+export default App
